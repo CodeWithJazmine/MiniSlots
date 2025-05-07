@@ -38,7 +38,6 @@ public class Reel : MonoBehaviour
     public void StopSpinning()
     {
         IsSpinning = false;
-        GetRandomSymbol();
     }
 
     public int GetSymbolIndex()
@@ -46,20 +45,14 @@ public class Reel : MonoBehaviour
         return CurrentIndex;
     }
 
-    public Sprite GetSymbolSprite()
+    public Symbol GetSymbol()
     {
-        return Symbols[CurrentIndex].Sprite;
+        return Symbols[CurrentIndex];
     }
 
     private void GetRandomSymbol()
     {
         CurrentIndex = UnityEngine.Random.Range(0, Symbols.Count);
-        SymbolRenderer.sprite = Symbols[CurrentIndex].Sprite;
-    }
-
-    // Method to get the payout of the current symbol
-    public int GetPayout()
-    {
-        return Symbols[CurrentIndex].Payout;
+        SymbolRenderer.sprite = Symbols[CurrentIndex].GetSprite();
     }
 }

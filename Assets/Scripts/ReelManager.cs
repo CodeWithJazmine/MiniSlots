@@ -34,5 +34,22 @@ public class ReelManager: MonoBehaviour
             Reels[i].StopSpinning();
             yield return new WaitForSeconds(StopDelayIncrement);
         }
+        
+    }
+
+    public Reel GetReel(int index)
+    {
+        if (index < 0 || index >= Reels.Length)
+        {
+            Debug.LogError("Reel index out of bounds.");
+            return null;
+        }
+        return Reels[index];
+    }
+
+    public float GetTotalSpinTime()
+    {
+        // Calculate the total spin time based on the number of reels and their respective delays
+        return SpinDuration + (Reels.Length - 1) * StopDelayIncrement;
     }
 }
