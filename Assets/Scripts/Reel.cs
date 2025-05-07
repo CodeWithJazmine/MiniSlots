@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-
 public class Reel : MonoBehaviour
 {
     [Header("Symbol Settings")] // Assign these in the inspector
@@ -9,36 +8,36 @@ public class Reel : MonoBehaviour
     private int CurrentIndex; // The index of symbol landed on
 
     [Header("Spin Settings")]
-    [SerializeField] private float SpinDuration = 3.0f;
+    [SerializeField] private float SpinSpeed = 0.05f; // How fast the symbol changes during a spin
+    
+    private bool IsSpinning = false;
 
     [ContextMenu("Spin")]
     public void Spin()
     {
-        CurrentIndex = UnityEngine.Random.Range(0, SymbolSprites.Length);
-        SymbolRenderer.sprite = SymbolSprites[CurrentIndex];
+        GetRandomSymbol();
     }
 
-    [ContextMenu("SpinWithAnimation")]
-    public void DebugSpinWithAnimation()
+    public void SpinWithAnimation()
     {
-        StartCoroutine(SpinWithAnimation(SpinDuration));
+        if (IsSpinning) return; // Prevent multiple spins at the same time
+        StartCoroutine(SpinCoroutine());
     }
-    private IEnumerator SpinWithAnimation(float Duration)
+    private IEnumerator SpinCoroutine()
     {
-        float ElapsedTime = 0.0f;
-        
-        // Displaying random symbols for the Duration
-        while(ElapsedTime < Duration)
+        IsSpinning = true;
+
+        while (IsSpinning)
         {
-            int RandomIndex = Random.Range(0, SymbolSprites.Length);
-            SymbolRenderer.sprite = SymbolSprites[RandomIndex];
-            yield return new WaitForSeconds(0.05f);
-            ElapsedTime += 0.1f;
+            GetRandomSymbol();
+            yield return new WaitForSeconds(SpinSpeed);
         }
+    }
 
-        // Display the symbol
-        CurrentIndex = UnityEngine.Random.Range(0, SymbolSprites.Length);
-        SymbolRenderer.sprite = SymbolSprites[CurrentIndex];
+    public void StopSpinning()
+    {
+        IsSpinning = false;
+        GetRandomSymbol();
     }
 
     public int GetSymbolIndex()
@@ -49,5 +48,11 @@ public class Reel : MonoBehaviour
     public Sprite GetSymbolSprite()
     {
         return SymbolSprites[CurrentIndex];
+    }
+
+    private void GetRandomSymbol()
+    {
+        CurrentIndex = UnityEngine.Random.Range(0, SymbolSprites.Length);
+        SymbolRenderer.sprite = SymbolSprites[CurrentIndex];
     }
 }
