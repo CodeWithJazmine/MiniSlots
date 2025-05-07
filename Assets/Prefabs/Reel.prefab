@@ -45,13 +45,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a437c0a8272fb456ca099be62d759470, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SymbolSprites:
-  - {fileID: 2193077994593488821, guid: e4953c61b64b14318a55d85e538c3c7e, type: 3}
-  - {fileID: -5620835742497143143, guid: 8e3a247ec5c114c17bfa33b4bc4381bd, type: 3}
-  - {fileID: -2391669244243282240, guid: 735531c896b9d4a3e9999c69614601b8, type: 3}
-  - {fileID: 4082474446782044660, guid: 533b0b1c0bb3b445ca3e06e585df9276, type: 3}
+  Symbols:
+  - Name: Cherry
+    Payout: 10
+    Sprite: {fileID: -5620835742497143143, guid: 8e3a247ec5c114c17bfa33b4bc4381bd, type: 3}
+  - Name: Bell
+    Payout: 20
+    Sprite: {fileID: -2391669244243282240, guid: 735531c896b9d4a3e9999c69614601b8, type: 3}
+  - Name: Seven
+    Payout: 50
+    Sprite: {fileID: 2193077994593488821, guid: e4953c61b64b14318a55d85e538c3c7e, type: 3}
+  - Name: Bar
+    Payout: 100
+    Sprite: {fileID: 4082474446782044660, guid: 533b0b1c0bb3b445ca3e06e585df9276, type: 3}
   SymbolRenderer: {fileID: 7141845396704663496}
-  SpinDuration: 3
+  SpinSpeed: 0.05
 --- !u!1 &6135392054893097725
 GameObject:
   m_ObjectHideFlags: 0

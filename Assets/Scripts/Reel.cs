@@ -1,9 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 public class Reel : MonoBehaviour
 {
     [Header("Symbol Settings")] // Assign these in the inspector
-    [SerializeField] private Sprite[] SymbolSprites;
+    [SerializeField] private List<Symbol> Symbols; // List of symbols to choose from
     [SerializeField] private SpriteRenderer SymbolRenderer;
     private int CurrentIndex; // The index of symbol landed on
 
@@ -47,12 +48,18 @@ public class Reel : MonoBehaviour
 
     public Sprite GetSymbolSprite()
     {
-        return SymbolSprites[CurrentIndex];
+        return Symbols[CurrentIndex].Sprite;
     }
 
     private void GetRandomSymbol()
     {
-        CurrentIndex = UnityEngine.Random.Range(0, SymbolSprites.Length);
-        SymbolRenderer.sprite = SymbolSprites[CurrentIndex];
+        CurrentIndex = UnityEngine.Random.Range(0, Symbols.Count);
+        SymbolRenderer.sprite = Symbols[CurrentIndex].Sprite;
+    }
+
+    // Method to get the payout of the current symbol
+    public int GetPayout()
+    {
+        return Symbols[CurrentIndex].Payout;
     }
 }
