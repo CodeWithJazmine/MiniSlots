@@ -2,15 +2,35 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [Header(("References"))]
+    [SerializeField] private ReelManager ReelManager;
+
+    [Header(("Game State"))]
+    [SerializeField] private int PlayerCredits = 100;
+    [SerializeField] private int BetAmount = 10;
+
+    [ContextMenu("Play Spin")]
+    public void PlaySpin()
     {
-        
+        if (PlayerCredits < BetAmount)
+        {
+            Debug.Log("Not enough credits to spin.");
+            return;
+        }
+
+        PlayerCredits -= BetAmount;
+        ReelManager.SpinAllReels();
+
+        Debug.Log($"Spinning... Current Credits: {PlayerCredits}");
     }
 
-    // Update is called once per frame
-    void Update()
+    public int GetCredits()
     {
-        
+        return PlayerCredits;
+    }
+
+    public void AddCredits(int amount)
+    {
+        PlayerCredits += amount;
     }
 }
