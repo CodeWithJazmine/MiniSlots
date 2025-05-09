@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+// Delegates for events
+public delegate void SpinCompleteHandler();
+
 public class ReelManager: MonoBehaviour
 {
     [Header("Reel Settings")]
@@ -11,7 +14,8 @@ public class ReelManager: MonoBehaviour
     [SerializeField] private float SpinDuration = 3.0f;
     [SerializeField] private float StopDelayIncrement = 0.5f;
 
-    public event Action OnSpinComplete;
+    // Events for UI updates
+    public event SpinCompleteHandler OnSpinComplete;
 
     [ContextMenu("SpinAllReels")]
     public void SpinAllReels()
@@ -22,6 +26,7 @@ public class ReelManager: MonoBehaviour
 
     private IEnumerator SpinAllReelsCoroutine()
     {
+
         // Start spinning all reels
         foreach (Reel reel in Reels)
         {
@@ -41,7 +46,7 @@ public class ReelManager: MonoBehaviour
         // Notify that the spin is complete to any listeners
         OnSpinComplete?.Invoke();
     }
-
+    
     public Reel GetReel(int index)
     {
         if (index < 0 || index >= Reels.Length)
@@ -50,11 +55,5 @@ public class ReelManager: MonoBehaviour
             return null;
         }
         return Reels[index];
-    }
-
-    public float GetTotalSpinTime()
-    {
-        // Calculate the total spin time based on the number of reels and their respective delays
-        return SpinDuration + (Reels.Length - 1) * StopDelayIncrement;
     }
 }

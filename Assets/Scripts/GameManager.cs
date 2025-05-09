@@ -1,17 +1,17 @@
 using UnityEngine;
 
+// Delegates for events
+public delegate void CreditsChangedHandler(int newCredits);
+public delegate void PayoutChangedHandler(int newPayout);
+public delegate void BetAmountChangedHandler(int newBetAmount);
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public bool IsSpinning {get; private set;} 
 
-    public delegate void CreditsChangedHandler(int newCredits);
+    // Events for UI updates
     public event CreditsChangedHandler OnCreditsChanged;
-
-    public delegate void BetAmountChangedHandler(int newBetAmount);
     public event BetAmountChangedHandler OnBetAmountChanged;
-
-    public delegate void PayoutChangedHandler(int newPayout);
     public event PayoutChangedHandler OnPayoutChanged;
 
     [Header(("References"))]
@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int PlayerCredits = 100;
     [SerializeField] private int BetAmount = 10;
     private int Payout = 0;
+    public bool IsSpinning {get; private set;} 
 
     private void Awake()
     {

@@ -28,7 +28,6 @@ public class HUD : MonoBehaviour
 
     private void UpdateCredits(int newCredits)
     {
-        Debug.Log("Credits updated: " + newCredits);
         CreditsAmount.text = newCredits.ToString();
     }
 
