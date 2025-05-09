@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class ReelManager: MonoBehaviour
     [Header("Spin Timing")]
     [SerializeField] private float SpinDuration = 3.0f;
     [SerializeField] private float StopDelayIncrement = 0.5f;
+
+    public event Action OnSpinComplete;
 
     [ContextMenu("SpinAllReels")]
     public void SpinAllReels()
@@ -34,7 +37,9 @@ public class ReelManager: MonoBehaviour
             Reels[i].StopSpinning();
             yield return new WaitForSeconds(StopDelayIncrement);
         }
-        
+
+        // Notify that the spin is complete to any listeners
+        OnSpinComplete?.Invoke();
     }
 
     public Reel GetReel(int index)

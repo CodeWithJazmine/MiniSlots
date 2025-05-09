@@ -1,36 +1,53 @@
 using System.Collections;
+using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+    public bool IsSpinning {get; private set;} 
+
     [Header(("References"))]
     [SerializeField] private ReelManager ReelManager;
 
     [Header(("Game State"))]
     [SerializeField] private int PlayerCredits = 100;
     [SerializeField] private int BetAmount = 10;
+    private int Payout = 0;
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        
+    }
+    private void Start()
+    {
+        ReelManager.OnSpinComplete += OnReelsFinished;
+    }
 
     [ContextMenu("Play Spin")]
     public void PlaySpin()
     {
-        if (PlayerCredits < BetAmount)
+        if (PlayerCredits < BetAmount || IsSpinning)
         {
-            Debug.Log("Not enough credits to spin.");
+            Debug.Log("Not enough credits to spin or already spinning.");
             return;
         }
 
-        PlayerCredits -= BetAmount;
+        AddCredits(-BetAmount); // Deduct the bet amount from player credits
+        IsSpinning = true;
         ReelManager.SpinAllReels();
-        StartCoroutine(WaitAndCheckWin());
-        Debug.Log($"Spinning... Current Credits: {PlayerCredits}");
     }
-    public IEnumerator WaitAndCheckWin()
-    {
-        // Wait for the reels to stop spinning
-        float totalWaitTime = ReelManager.GetTotalSpinTime();
-        yield return new WaitForSeconds(totalWaitTime);
 
-        // Check for win after all reels have stopped
+    public void OnReelsFinished()
+    {
+        IsSpinning = false;
         CheckWin();
     }
     public void CheckWin()
@@ -42,14 +59,13 @@ public class GameManager : MonoBehaviour
         // All three symbols must match
         if (Sym1 == Sym2 && Sym2 == Sym3)
         {
-            AddCredits(Sym1 * BetAmount); // Payout is the symbol value times the bet amount
-            Debug.Log($"Jackpot! Payout: {Sym1 * BetAmount}. Current Credits: {PlayerCredits}");
+            Payout = Sym1 * BetAmount; // Payout is the symbol value times the bet amount
+            AddCredits(Sym1 * BetAmount); 
+            Debug.Log($"Jackpot! Payout: {Payout}. Current Credits: {PlayerCredits}");
         }
         // Two symbols match
         else if (Sym1 == Sym2 || Sym1 == Sym3 || Sym2 == Sym3)
         {
-            int Payout = 0;
-
             if (Sym1 == Sym2) Payout = Sym1;
             else if (Sym1 == Sym3) Payout = Sym1;
             else if (Sym2 == Sym3) Payout = Sym2;
@@ -70,6 +86,37 @@ public class GameManager : MonoBehaviour
         return PlayerCredits;
     }
 
+    public int GetBetAmount()
+    {
+        return BetAmount;
+    }
+
+    public void SetBetAmount(int amount)
+    {
+        if (amount > 0)
+        {
+            BetAmount = amount;
+        }
+        else
+        {
+            Debug.LogError("Bet amount must be greater than zero.");
+        }
+    }
+
+    public void ResetCredits()
+    {
+        PlayerCredits = 100; // Reset to default value
+    }
+
+    public void ResetBetAmount()
+    {
+        BetAmount = 10; // Reset to default value
+    }
+   public int GetPayout()
+    {
+        return Payout;
+    }
+    
     public void AddCredits(int amount)
     {
         PlayerCredits += amount;
