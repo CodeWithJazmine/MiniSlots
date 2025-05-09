@@ -1,12 +1,18 @@
-using System.Collections;
-using NUnit.Framework;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public bool IsSpinning {get; private set;} 
+
+    public delegate void CreditsChangedHandler(int newCredits);
+    public event CreditsChangedHandler OnCreditsChanged;
+
+    public delegate void BetAmountChangedHandler(int newBetAmount);
+    public event BetAmountChangedHandler OnBetAmountChanged;
+
+    public delegate void PayoutChangedHandler(int newPayout);
+    public event PayoutChangedHandler OnPayoutChanged;
 
     [Header(("References"))]
     [SerializeField] private ReelManager ReelManager;
@@ -29,6 +35,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         ReelManager.OnSpinComplete += OnReelsFinished;
+        OnCreditsChanged?.Invoke(PlayerCredits);
+        OnBetAmountChanged?.Invoke(BetAmount);
     }
 
     [ContextMenu("Play Spin")]
@@ -41,8 +49,10 @@ public class GameManager : MonoBehaviour
         }
 
         AddCredits(-BetAmount); // Deduct the bet amount from player credits
+        ResetPayout(); // Reset payout to zero
         IsSpinning = true;
         ReelManager.SpinAllReels();
+
     }
 
     public void OnReelsFinished()
@@ -77,8 +87,10 @@ public class GameManager : MonoBehaviour
         // No win
         else
         {
+            Payout = 0;
             Debug.Log("No win this time.");
         }
+        OnPayoutChanged?.Invoke(Payout);
     }
 
     public int GetCredits()
@@ -96,6 +108,7 @@ public class GameManager : MonoBehaviour
         if (amount > 0)
         {
             BetAmount = amount;
+            OnBetAmountChanged?.Invoke(BetAmount);
         }
         else
         {
@@ -106,19 +119,24 @@ public class GameManager : MonoBehaviour
     public void ResetCredits()
     {
         PlayerCredits = 100; // Reset to default value
+        OnCreditsChanged?.Invoke(PlayerCredits);
     }
 
     public void ResetBetAmount()
     {
         BetAmount = 10; // Reset to default value
+        OnBetAmountChanged?.Invoke(BetAmount);
     }
-   public int GetPayout()
+
+    public void ResetPayout()
     {
-        return Payout;
+        Payout = 0; // Reset to zero
+        OnPayoutChanged?.Invoke(Payout);
     }
     
     public void AddCredits(int amount)
     {
         PlayerCredits += amount;
+        OnCreditsChanged?.Invoke(PlayerCredits);
     }
 }
