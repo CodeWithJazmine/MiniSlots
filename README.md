@@ -2,7 +2,7 @@
 
 **Mini Slots** is a small Unity project built to explore the core mechanics of a classic slot machine. The goal was to get hands-on experience with common slot gameplay systems, such as reel spinning, win detection, and payouts, in preparation for roles in the slot gaming industry.
 
-This game is playable in-browser on [itch.io](https://your-itch-link-here) and is intended as a showcase project.
+This game is playable in-browser on [itch.io](https://jazminechargualaf.itch.io/mini-slots) and is intended as a showcase project.
 
 ## Features
 
