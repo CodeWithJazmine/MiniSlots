@@ -104,16 +104,29 @@ public class GameManager : MonoBehaviour
         return BetAmount;
     }
 
-    public void SetBetAmount(int amount)
+    public void AddBetAmount(int amount)
     {
         if (amount > 0)
         {
-            BetAmount = amount;
+            if (BetAmount + amount > PlayerCredits)
+            {
+                Debug.Log("Cannot increase bet amount beyond available credits.");
+                return;
+            }
+
+            BetAmount += amount;
             OnBetAmountChanged?.Invoke(BetAmount);
         }
-        else
+        else if (amount < 0 && BetAmount + amount >= 0)
         {
-            Debug.LogError("Bet amount must be greater than zero.");
+            if (BetAmount + amount < 0)
+            {
+                Debug.Log("Bet amount cannot be negative.");
+                return;
+            }
+            
+            BetAmount += amount;
+            OnBetAmountChanged?.Invoke(BetAmount);
         }
     }
 
